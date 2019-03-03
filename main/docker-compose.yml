@@ -1,0 +1,96 @@
+version: '3.2'
+
+services:
+
+  db:
+    image: ms4b/1c-postgres:9.6.11
+    container_name: 1c-postgres
+    hostname: 1c-postgres
+    restart: always
+    volumes:
+    - /var/volumes/1c-postgres-data:/data
+    environment:
+      POSTGRES_PASSWORD: password
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    hostname: pgadmin
+    restart: always
+    ports:
+    - "8000:80"
+    volumes:
+    - /var/volumes/pgadmin-data:/var/lib/pgadmin
+    environment:
+    - PGADMIN_DEFAULT_EMAIL=alexji@mail.ru
+    - PGADMIN_DEFAULT_PASSWORD=password
+    links:
+    - "db:1c-postgres"
+    depends_on:
+    - db
+
+  1c:
+    image: ms4b/1c-server:8.3.13-1644
+    container_name: 1c-server
+    hostname: 1c-server
+    restart: always
+    ports:
+    - "1540-1541:1540-1541"
+    - "1560-1591:1560-1591"
+    volumes:
+     - /var/volumes/1c-server-logs:/var/log/1c
+     - /var/volumes/1c-server-home:/home/usr1cv8
+    links:
+    - "db:1c-postgres"
+    depends_on:
+    - db
+
+  apache:
+    image: ms4b/1c-apache:2.4
+    container_name: 1c-apache
+    hostname: 1c-apache
+    restart: always
+    links:
+    - "1c:1c-server"
+    depends_on:
+    - 1c
+
+  portainer:
+    image: portainer/portainer
+    container_name: portainer
+    hostname: portainer
+    restart: always
+    ports:
+    - "9000:9000"
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /var/volumes/portainer-data:/data
+
+  nginx:
+    image: ms4b/nginx:1.15
+    container_name: nginx
+    hostname: nginx
+  #  restart: unless-stopped
+    restart: always
+  #  volumes:
+  #  - ./var/volumes/certbot-conf:/etc/letsencrypt
+  #  - ./var/volumes/certbot-www:/var/www/certbot
+    ports:
+    - "80:80"
+    - "443:443"
+    links:
+    - "apache:1c-apache"
+    depends_on:
+    - apache
+
+  #certbot:
+  #  image: certbot/certbot
+  #  container_name: certbot
+  #  hostname: certbot
+  #  restart: unless-stopped
+  #  volumes:
+  #  - ./var/volumes/certbot-conf:/etc/letsencrypt
+  #  - ./var/volumes/certbot-www:/var/www/certbot
+  #  - ./var/volumes/certbot-logs:/var/log/letsencrypt
+  #  depends_on:
+  #  - nginx

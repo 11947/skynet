@@ -1,0 +1,1 @@
+docker push ms4b/1c-postgres:10.5

@@ -1,0 +1,43 @@
+# за основу берем стандартный образ Alpine+Nginx 1.15: https://hub.docker.com/_/nginx
+FROM nginx:1.15-alpine
+MAINTAINER ms4b
+
+# основная конфигурация nginx
+ARG DIST_CFG=./data/nginx/app.conf
+# расположение ssl-сертификатов
+ARG DIST_SSL=./data/ssl
+# скрипт точки входа
+ARG DIST_EP=./docker-entrypoint.sh
+
+# расположение конфигурации nginx
+ARG DEST_CFG=/etc/nginx/conf.d
+# расположение скрипта точки входа
+ARG DEST_EP=
+# расположение letsencrypt
+ARG DEST_LE=/etc/letsencrypt
+# расположение certbot
+ARG DEST_SERTBOT=/var/www/certbot
+# расположение логов
+ARG DEST_LOG=/var/log/nginx
+
+# перенос файла настроек Nginx
+ADD ${DIST_CFG} ${DEST_CFG}/
+
+# перенос ssl-сертификатов
+ADD ${DIST_SSL}/* ${DEST_LE}/live/api.ms4b.ru/
+
+# перенос скрипта запуска
+ADD ${DIST_EP} ${DEST_EP}/
+
+# установим возможность запуска управляющего скрипта
+RUN chmod +x /docker-entrypoint.sh
+
+# каталоги letsencrypt и certbot
+VOLUME ${DEST_LE} ${DEST_SERTBOT} ${DEST_LOG}
+
+# определение точки входа
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+# публикация портов сервера
+EXPOSE 80 443
+
