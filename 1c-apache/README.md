@@ -15,6 +15,7 @@
 
 1. На каждую информационную базу в файл "publications.conf" добавляется шаблон:
 
+        
     Alias "/[BaseName]" "/usr/local/apache2/htdocs/[BaseName]/"
         <Directory "/usr/local/apache2/htdocs/[BaseName]/">
             AllowOverride All
@@ -25,7 +26,6 @@
             SetHandler 1c-application
             ManagedApplicationDescriptor "/usr/local/apache2/htdocs/[BaseName]/default.vrd"
         </Directory>
-    
 [BaseName] - имя публикуемой информационной базы
 
 2. В каталоге "publications" нужно создать каталог с таким же именем, которое было использовано в [BaseName]
