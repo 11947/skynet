@@ -1,36 +1,20 @@
-# docker-1c-server
+# Контейнер Docker сервер 1С-Предприятие 8
 
-## Что это?
+## Сборка ораза Docker:
 
-docker-1c-server -- это сервер 1С:Предприятия 8.3.13-1644 в контейнере Docker. Все настройки - стандартные.
+Поместить в каталог "dist" установочные пакеты для 64-битных Debian систем (*.deb)
 
-## Как запустить?
+В файле "Dockerfile" значение переменной "SERVER_1C_VERSION" установить в соотвтетсвии с версией дистрибутива
 
-    docker run --name 1c-server --hostname 1c-server --net host --detach --volume 1c-server-home:/home/usr1cv8 --volume 1c-server-logs:/var/log/1C ms4b/1c-server:8.3.13-1644
+Настройки логирования сервера конфигурируются в файле "logcfg.xml"
 
-## Как остановить/запустить/перезапустить контейнер?
+Собрать образ скриптом "scripts/build.cmd"
 
-Для управления контейнером используйте команды:
+## Тестовый запуск контейнера
 
-    docker stop 1c-server
-    docker start 1c-server
-    docker restart 1c-server
+Создать и запустить контейнер скриптом "scripts/run.cmd"
 
-## Где мои данные?
+Прописать с локальный файл "hosts" имя "1c-server" на адрес "127.0.0.1"
 
-Данные сервера 1С:Предприятия вы можете найти в каталогах `/var/lib/docker/volumes/1c-server-home/_data` (домашний каталог пользователя `usr1cv8`) и `/var/lib/docker/volumes/1c-server-logs/_data` (технологические журналы).
+Подключиться к кластеру серверов 1С-Предприятие через консоль администрирования по имени "1c-server"
 
-## Как это удалить?
-
-Удалите контейнер:
-
-    docker rm -f 1c-server
-
-Удалите образ:
-
-    docker rmi ms4b/1c-server
-
-Удалите данные:
-
-    docker volume rm 1c-server-home
-    docker volume rm 1c-server-logs
