@@ -14,20 +14,5 @@
 ## Публикация инфортационных баз 1С
 
 1. На каждую информационную базу в файл "publications.conf" добавляется шаблон:
-
-
-    Alias "/[BaseName]" "/usr/local/apache2/htdocs/[BaseName]/"
-        <Directory "/usr/local/apache2/htdocs/[BaseName]/">
-            AllowOverride All
-            Options None
-            #Order allow,deny
-            #Allow from all
-            Require all granted
-            SetHandler 1c-application
-            ManagedApplicationDescriptor "/usr/local/apache2/htdocs/[BaseName]/default.vrd"
-        </Directory>
-        
-[BaseName] - имя публикуемой информационной базы
-
 2. В каталоге "publications" нужно создать каталог с таким же именем, которое было использовано в [BaseName]
 3. В каталоге publications/[BaseName] должен быть создан файл с именем  "default.vrd". Этот файл создается платформой 1С-Предприятие при публиации информационной базы.
