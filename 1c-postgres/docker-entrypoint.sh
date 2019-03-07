@@ -127,6 +127,18 @@ if [ "$1" = 'postgres' ]; then
 		echo
 		echo 'PostgreSQL init process complete; ready for start up.'
 		echo
+	else
+	    echo
+        for f in /docker-entrypoint-initdb.d/*; do
+        	case "$f" in
+        		*.sh)     echo "$0: running $f"; . "$f" ;;
+        		*.sql)    echo "$0: running $f"; "${psql[@]}" -f "$f"; echo ;;
+        		*.sql.gz) echo "$0: running $f"; gunzip -c "$f" | "${psql[@]}"; echo ;;
+        		*.conf)   echo "$0: copying $f" to $PGDATA; cp "$f" "$PGDATA"; echo ;;
+        		*)        echo "$0: ignoring $f" ;;
+        	esac
+        	echo
+        done
 	fi
 fi
 

@@ -3,7 +3,6 @@ FROM ms4b/centos:latest
 
 # источники
 ARG DIST_EP=./docker-entrypoint.sh
-#ARG DIST_CFG=./postgresql.conf.sh
 ARG DIST_CFG=./postgresql.conf
 ARG DIST_PG=./dist/postgres/*
 ARG DIST_PGA=./dist/addon/*
