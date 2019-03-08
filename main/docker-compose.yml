@@ -3,7 +3,7 @@ version: '3.2'
 services:
 
   db:
-    image: ms4b/1c-postgres:9.6.11
+    image: ms4b/1c-postgres:10.5
     container_name: 1c-postgres
     hostname: 1c-postgres
     restart: always
